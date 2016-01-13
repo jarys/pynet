@@ -1,6 +1,6 @@
 import socket,select,sys,time
 from errors import *
-from communicate import SendData, ReceiveData
+import protocol
     
 class Server():
     def __init__(self):
@@ -11,7 +11,7 @@ class Server():
     def connect_func(self,sock,host,port):print('server sucessfully bind')
     def client_connect_func(self,sock,host,port,address):print("client connected")
     def client_disconnect_func(self,sock,host,port,address):print("disconnecting client")
-    def quit_func(self,host,port):pass
+    def quit_func(self,host,port):print('server terminated')
         
     def connect(self, host, port):
         self.host = host
@@ -44,7 +44,7 @@ class Server():
                     self.socketaddresses[connected_socket] = address
                     self.client_connect_func(connected_socket, self.host, self.port, address)
                 else:
-                    data = ReceiveData(sock)
+                    data = protocol.recv(sock)
                     try:
                         address = self.socketaddresses[sock]
                         self.input_func(sock, self.host, self.port, address)
@@ -63,7 +63,7 @@ class Server():
 
     def send_data(self, data):
         try:
-            SendData(self.sending_socket, data)
+            protocol.send(self.sending_socket, data)
             address = self.socketaddresses[self.sending_socket]
             self.input_func(self.sending_socket,self.host,self.port,address)
         except:
@@ -72,7 +72,7 @@ class Server():
     def send_data_to_all(self, data):
         for socket in self.connected_sockets:
             try:
-                SendData(socket, data)
+                protocol.send(socket, data)
                 address = self.socketaddresses[socket]
                 self.input_func(socket,self.host,self.port,address)
             except:
