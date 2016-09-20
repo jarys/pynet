@@ -1,10 +1,7 @@
 import socket,select,sys,time
-from errors import *
 import protocol
 
 class Client:
-    def __init__(self):
-        pass
     def connect(self, host, port):
         self.host = host
         self.port = port
@@ -13,7 +10,7 @@ class Client:
             self.sock.connect((self.host, self.port))
         except:
             self.sock.close()
-            raise SocketError("The connection could not be opened.  It must be created first with a server object.")
+            raise
         
     def send(self, data):
         protocol.send(self.sock, data)
