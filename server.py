@@ -30,6 +30,7 @@ class Server():
 		address = self.socketaddresses[sock]
 		self.client_disconnect_func(sock, self.host, self.port, address)
 		self.connected_sockets.remove(sock)
+		self.socketaddresses.remove(sock)
 
 	def serve_forever(self):
 		self.looping = True
